@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'HomeController@welcome');
 
 Route::get('tree/{id}',[
     'uses'  =>  'GroupsController@get_tree'
