@@ -78,6 +78,10 @@
 		top: -21px;
 		width: 16px;
 	}
+
+	.caret{
+		cursor: pointer;
+	}
 </style>
 @endsection
 
@@ -111,17 +115,19 @@
 	<div class="col-md-12 item-section">
 		@foreach($items as $item)
 		<div class="col-md-3">
-			<div class="item-container">
-				<div class="item-header">
-					<img class="item-img" src="{{URL::asset('files').'/'.$item->img1}}" style="height: 100px;" data-zoom-image="{{URL::asset('files').'/'.$item->img1}}">
-				</div>
+			<a href="{{route('index.item', $item->id)}}">
+				<div class="item-container">
+					<div class="item-header">
+						<img class="item-img" src="{{URL::asset('files').'/'.$item->img1}}" style="height: 100px;" data-zoom-image="{{URL::asset('files').'/'.$item->img1}}">
+					</div>
 
-				<div class="item-info">
-					<h3>{{$item->name}}</h3>
-					{{$item->price}}
-				</div>
+					<div class="item-info">
+						<h3>{{$item->name}}</h3>
+						{{$item->price}}
+					</div>
 
-			</div>
+				</div>
+			</a>
 		</div>
 		@endforeach
 	</div>
@@ -138,14 +144,18 @@
 	var cat = <?php print_r(json_encode(session("tree"))) ?>;
 	var search = [];
 
-	function categories(array){
-		var html = "<ul>";
-
+	function categories(array, lvl){
+		if (lvl == 0) {
+			var html = "<ul class='toplist'>";
+		} else {
+			var html = "<ul class='sublist hidden'>";
+		}
+		
 		for (var i = 0; i < array.length; i++) {
 			if (array[i].type == "group"){
 				html+= "<li><a class='cat-group' href='{{url('/')}}?category="+array[i].name+"&type=gr'>"+array[i].name;
-				html+="</a><span class='caret'></span>";
-				html+= categories(array[i].childs);
+				html+="</a><a class='sublistCaret'><span class='caret'></span></a>";
+				html+= categories(array[i].childs, lvl+1);
 				html+="</li>"
 			} else {
 				html+= "<li><a class='cat-group' href='{{url('/')}}?category="+array[i].name+"&type=cat'>"+array[i].name;
@@ -158,7 +168,7 @@
 	}
 
 	$(document).ready(function(){
-		$(".categories").append(categories(cat));
+		$(".categories").append(categories(cat, 0));
 
 		$(".sort-filter option[value='<?php echo session("order") ?>']").attr('selected', true);
 
@@ -171,12 +181,11 @@
 			search[aux[0]] = aux[1];
 		}
 
-      //   $(".item-img").elevateZoom({
-      //     zoomType              : "inner",
-      //     cursor: "crosshair"
-      // });
-
-  });
+		$(".sublistCaret").click(function(e){
+			e.preventDefault();
+			$(this).siblings(".sublist").toggleClass("hidden");
+		});
+	});
 
 	$(".sort-filter").on("change", function(){
 		url = "{{url('/')}}?order="+$(this).val();
@@ -193,18 +202,18 @@
 		window.location.replace(url);
 	});
 
-	$("span.cat-group").on("click", function(){
-	});
-
 	$("span[for='search']").click(function(){
 		$("#search-form").submit();
 	});
 
 	$("#search-form").submit(function(e){
-		 e.preventDefault();
-		 url = "{{url('/')}}?search="+$("#search").val();
+		e.preventDefault();
 
-		 window.location.replace(url);
+		if ($("#search").val() != "") {
+			url = "{{url('/')}}?search="+$("#search").val();
+
+			window.location.replace(url);
+		}
 	});
 </script>
 

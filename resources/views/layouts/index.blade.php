@@ -10,6 +10,7 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/css/slick.css"/>
 
     @yield('css')
 
@@ -136,7 +137,8 @@
 </div>
 
 <script src="/js/app.js"></script>
-<!-- <script src="/js/jquery.elevatezoom.js" type="text/javascript"></script> -->
+<script src="/js/jquery.elevatezoom.js" type="text/javascript"></script>
+<script src="/js/slick.js" type="text/javascript"></script>
 @yield('script')
 </body>
 
